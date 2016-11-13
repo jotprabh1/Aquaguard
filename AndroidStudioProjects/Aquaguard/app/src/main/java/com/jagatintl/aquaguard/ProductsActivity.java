@@ -1,6 +1,7 @@
 package com.jagatintl.aquaguard;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -24,6 +25,7 @@ public class ProductsActivity extends AppCompatActivity {
     ImageButton searchButton;
     public static ArrayList<HashMap<String,String>> searchProductList = new ArrayList<>();
     public static ArrayList<Bitmap> searchProductImages=new ArrayList<>();
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,12 @@ public class ProductsActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        preferences=getSharedPreferences("MyPrefs",MODE_PRIVATE);
+        int pos=preferences.getInt("Position",-1);
+        if(pos>=0)
+        {
+            startActivity(new Intent(ProductsActivity.this,ReviewActivity.class));
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

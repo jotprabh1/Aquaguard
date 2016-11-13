@@ -41,7 +41,6 @@ public class SplashScreen extends Activity {
     public static ArrayList<HashMap<String, String>> productList=new ArrayList<>();
     public static ArrayList<Bitmap> ProductImages=new ArrayList<>();
 
-    final PrefetchData data=new PrefetchData();
     Handler handler=new Handler();
 
     @Override
@@ -54,12 +53,11 @@ public class SplashScreen extends Activity {
          * data before launching the app Will use AsyncTask to make http call
          */
 
-
+        PrefetchData data=new PrefetchData();
         data.execute();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-//                if(data.getStatus()==AsyncTask.Status.RUNNING)
                 Toast.makeText(SplashScreen.this, "Your Internet Connection is slow", Toast.LENGTH_SHORT).show();
             }
         },8000);
@@ -70,38 +68,34 @@ public class SplashScreen extends Activity {
     public static boolean searchContactList(HashMap<String,String > search)
     {
         int i =0;
-        boolean match=false;
         HashMap<String,String> contact;
         while(i<contactList.size())
         {
             contact=contactList.get(i);
             if(search.get(TAG_NAME).equals(contact.get(TAG_NAME)) && search.get(TAG_ADDRESS).equals(contact.get(TAG_ADDRESS)))
             {
-                match=true;
-                break;
+                return true;
             }
 
             i++;
         }
-        return match;
+        return false;
     }
     public static boolean searchContactList(String search)
     {
         int i =0;
-        boolean match=false;
         HashMap<String,String> contact;
         while(i<contactList.size())
         {
             contact=contactList.get(i);
             if(search.equals(contact.get(TAG_NAME)))
             {
-                match=true;
-                break;
+                return true;
             }
 
             i++;
         }
-        return match;
+        return false;
     }
 
     /**
@@ -175,19 +169,6 @@ public class SplashScreen extends Activity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            } else {
-                new AlertDialog.Builder(SplashScreen.this)
-                        .setMessage(R.string.dialog_connection_na)
-                        .setPositiveButton(R.string.dialog_location_yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                doInBackground();
-                            }
-                        })
-                        .setNegativeButton(R.string.dialog_location_no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                finish();
-                            }
-                        }).create().show();
             }
             return null;
         }

@@ -1,5 +1,6 @@
 package com.jagatintl.aquaguard;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,9 +20,9 @@ public class ReviewActivity extends AppCompatActivity {
     Spinner spinnerProd;
     EditText review;
     Button submit;
-
+    SharedPreferences preferences;
     ArrayList<String> products = new ArrayList<>();
-
+    int pos;
     String prod="",rev="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,10 @@ public class ReviewActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter=new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,products);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerProd.setAdapter(adapter);
+        preferences=getSharedPreferences("MyPrefs",MODE_PRIVATE);
+        pos = preferences.getInt("Position",-1);
+        if(pos>=0)
+            spinnerProd.setSelection(pos);
         spinnerProd.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -62,6 +67,10 @@ public class ReviewActivity extends AppCompatActivity {
                         rev="Review: "+rev;
                         ChatActivity.insertToOnlineDB(prod,rev,Login.eml);
                         review.setText("");
+                        if(pos>=0)
+                        {
+                            preferences.edit().remove("Position").apply();
+                        }
                         onBackPressed();
                         finish();
                     }else

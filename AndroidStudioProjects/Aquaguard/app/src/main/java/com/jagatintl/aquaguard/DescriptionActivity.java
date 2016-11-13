@@ -1,5 +1,7 @@
 package com.jagatintl.aquaguard;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +18,8 @@ public class DescriptionActivity extends AppCompatActivity {
     ImageView img;
     TextView desc;
     Button purchasebutton;
+    int pos;
+    SharedPreferences preference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,14 +31,20 @@ public class DescriptionActivity extends AppCompatActivity {
         desc=(TextView)findViewById(R.id.textViewDescription);
         purchasebutton=(Button)findViewById(R.id.purchasebutton);
 
-        int i=getIntent().getExtras().getInt("Key");
+        pos=getIntent().getExtras().getInt("Key");
 
-        img.setImageBitmap(ProductsActivity.searchProductImages.get(i));
-        desc.setText(ProductsActivity.searchProductList.get(i).get(SplashScreen.TAG_NAME));
+        preference=getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+
+        img.setImageBitmap(ProductsActivity.searchProductImages.get(pos));
+        desc.setText(ProductsActivity.searchProductList.get(pos).get(SplashScreen.TAG_NAME));
         purchasebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(DescriptionActivity.this, "Thanks for Your Purchase!!!", Toast.LENGTH_SHORT).show();
+                SharedPreferences.Editor editor=preference.edit();
+                editor.putInt("Position",pos);
+                editor.apply();
+
             }
         });
 
